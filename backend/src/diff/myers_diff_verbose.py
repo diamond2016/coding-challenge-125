@@ -1,7 +1,7 @@
-def myers_diff_verbose(a: str, b: str):
+def myers_diff_verbose(a: str, b: str) -> list[tuple[str, str]] | None:
     n, m = len(a), len(b)
     V = {0: 0}
-    trace = []
+    trace: list[dict[int, int]]= []
 
     print("\n=== START MYERS ===")
     print(f"String A: {a}")
@@ -14,7 +14,7 @@ def myers_diff_verbose(a: str, b: str):
         print(f"   LEVEL d = {d}")
         print("--------------------------------")
 
-        new_V = {}
+        new_V: dict[int, int] = {}
 
         for k in range(-d, d + 1, 2):
             print(f"\n  Diagonal k = {k}")
@@ -60,7 +60,7 @@ def myers_diff_verbose(a: str, b: str):
         V = new_V
 
 
-def reconstruct_verbose(a: str, b: str, trace):
+def reconstruct_verbose(a: str, b: str, trace: list[dict[int, int]]) -> list[tuple[str, str]]:
     print("\n=== RECONSTRUCT ===")
     edits = []
     x, y = len(a), len(b)
