@@ -3,23 +3,23 @@ def myers_diff_verbose(a: str, b: str):
     V = {0: 0}
     trace = []
 
-    print("\n=== INIZIO ALGORITMO DI MYERS ===")
-    print(f"Stringa A: {a}")
-    print(f"Stringa B: {b}\n")
+    print("\n=== START MYERS ===")
+    print(f"String A: {a}")
+    print(f"String B: {b}\n")
 
     max_d = n + m
 
     for d in range(max_d + 1):
         print(f"\n--------------------------------")
-        print(f"   LIVELLO d = {d}")
+        print(f"   LEVEL d = {d}")
         print("--------------------------------")
 
         new_V = {}
 
         for k in range(-d, d + 1, 2):
-            print(f"\n  Diagonale k = {k}")
+            print(f"\n  Diagonal k = {k}")
 
-            # Scegli la mossa (insert o delete)
+            # move (insert o delete)
             if k == -d:
                 x_start = V[k + 1]
                 move = "insert (→)"
@@ -36,23 +36,23 @@ def myers_diff_verbose(a: str, b: str):
 
             y_start = x_start - k
 
-            print(f"    Scelta mossa: {move}")
-            print(f"    Punto di partenza: (x={x_start}, y={y_start})")
+            print(f"    Move: {move}")
+            print(f"    Start: (x={x_start}, y={y_start})")
 
-            # Avanza lungo la diagonale
+            # Along diag
             x, y = x_start, y_start
             while x < n and y < m and a[x] == b[y]:
-                print(f"    Match diagonale: A[{x}]={a[x]} == B[{y}]={b[y]}")
+                print(f"    Match diag: A[{x}]={a[x]} == B[{y}]={b[y]}")
                 x += 1
                 y += 1
 
-            print(f"    Fine avanzamento diagonale → (x={x}, y={y})")
+            print(f"    End diag advance → (x={x}, y={y})")
 
             new_V[k] = x
 
             # Obiettivo raggiunto
             if x >= n and y >= m:
-                print("\n>>> RAGGIUNTO OBIETTIVO (fine di entrambe le stringhe)")
+                print("\n>>> OK TARGET")
                 trace.append(new_V)
                 return reconstruct_verbose(a, b, trace)
 
@@ -61,15 +61,15 @@ def myers_diff_verbose(a: str, b: str):
 
 
 def reconstruct_verbose(a: str, b: str, trace):
-    print("\n=== RICOSTRUZIONE DEL PERCORSO ===")
+    print("\n=== RECONSTRUCT ===")
     edits = []
     x, y = len(a), len(b)
 
     for d in reversed(range(len(trace))):
-        print(f"\n-- Risalgo livello d = {d} --")
+        print(f"\n-- up d = {d} --")
         V = trace[d]
         k = x - y
-        print(f"  Coordinate attuali: (x={x}, y={y}), diagonale k={k}")
+        print(f"  coords: (x={x}, y={y}), diag k={k}")
 
         # Determina la mossa precedente
         if k == -d:
@@ -92,9 +92,9 @@ def reconstruct_verbose(a: str, b: str, trace):
 
         prev_y = prev_x - prev_k
 
-        print(f"  Provenivo da diagonale k={prev_k}")
-        print(f"  Punto precedente: (x={prev_x}, y={prev_y})")
-        print(f"  Operazione: {op}")
+        print(f"  from diag k={prev_k}")
+        print(f"  prev point: (x={prev_x}, y={prev_y})")
+        print(f"  Operations: {op}")
 
         # Match lungo la diagonale
         while x > prev_x and y > prev_y:
