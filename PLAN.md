@@ -99,3 +99,6 @@ This means you never write manual fetch functions or define API interface types 
 - backend localhost:8000
 
 - frontend localhost:5173
+
+
+07.07.2026: We have completed step 1- now study diff algorithm (we want to use existing libraries from python!)
