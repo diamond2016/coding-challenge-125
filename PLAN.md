@@ -93,8 +93,6 @@ This means you never write manual fetch functions or define API interface types 
 ---
 
 ### Running app
-`pnpm dev:backend`
-`pnpm dev:frontend`
 
 `pnpm dev` run all concurrently
 
