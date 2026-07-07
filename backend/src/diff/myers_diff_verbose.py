@@ -20,7 +20,11 @@ def myers_diff_verbose(a: str, b: str) -> list[tuple[str, str]] | None:
             print(f"\n  Diagonal k = {k}")
 
             # move (insert o delete)
-            if k == -d:
+            if d == 0 and k == 0:
+            # Base case: start from (0, 0)
+                x_start = 0
+                move = "start"
+            elif k == -d:
                 x_start = V[k + 1]
                 move = "insert (→)"
             elif k == d:
@@ -54,7 +58,8 @@ def myers_diff_verbose(a: str, b: str) -> list[tuple[str, str]] | None:
             if x >= n and y >= m:
                 print("\n>>> OK TARGET")
                 trace.append(new_V)
-                return reconstruct_verbose(a, b, trace)
+                return None
+                #return reconstruct_verbose(a, b, trace)
 
         trace.append(new_V)
         V = new_V
