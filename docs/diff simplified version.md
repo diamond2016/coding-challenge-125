@@ -161,91 +161,80 @@ b = "CBABAC"  (m=6)
 A possible implementation
 
 ```python
-from dataclasses import dataclass
-
-@dataclass
-class Edit:
-    op: str   # "match", "insert", "delete"
-    char: str
-
-def myers_diff(a: str, b: str):
-    """
-    Educational version of Myers' algorithm.
-    - No optimization
-    - Only forward pass
-    - Simple path reconstruction
-    """
-
+def myers_diff_verbose(a: str, b: str):
     n, m = len(a), len(b)
-
-    # V[k] = furthest x reached on diagonal k = x - y
-    # Using a dict for educational simplicity
     V = {0: 0}
-
-    # Track each depth level to reconstruct the path
     trace = []
 
-    max_d = n + m  # theoretical maximum limit
+    print("\n=== INIZIO ALGORITMO DI MYERS ===")
+    print(f"Stringa A: {a}")
+    print(f"Stringa B: {b}\n")
+
+    max_d = n + m
 
     for d in range(max_d + 1):
+        print(f"\n--------------------------------")
+        print(f"   LIVELLO d = {d}")
+        print("--------------------------------")
+
         new_V = {}
 
-        # Possible diagonals at depth d range from -d to +d with step 2
         for k in range(-d, d + 1, 2):
+            print(f"\n  Diagonale k = {k}")
 
-            # Choose whether to come from k-1 (delete) or k+1 (insert)
-            # Myers' rule: choose the move that advances furthest
+            # Scegli la mossa (insert o delete)
             if k == -d:
-                # Can only do insert (move right)
                 x_start = V[k + 1]
+                move = "insert (→)"
             elif k == d:
-                # Can only do delete (move down)
                 x_start = V[k - 1] + 1
+                move = "delete (↓)"
             else:
-                # Choose the best move
                 if V[k - 1] + 1 > V[k + 1]:
-                    # delete → move down
                     x_start = V[k - 1] + 1
+                    move = "delete (↓)"
                 else:
-                    # insert → move right
                     x_start = V[k + 1]
+                    move = "insert (→)"
 
             y_start = x_start - k
 
-            # Advance along the diagonal while characters match
+            print(f"    Scelta mossa: {move}")
+            print(f"    Punto di partenza: (x={x_start}, y={y_start})")
+
+            # Avanza lungo la diagonale
             x, y = x_start, y_start
             while x < n and y < m and a[x] == b[y]:
+                print(f"    Match diagonale: A[{x}]={a[x]} == B[{y}]={b[y]}")
                 x += 1
                 y += 1
 
+            print(f"    Fine avanzamento diagonale → (x={x}, y={y})")
+
             new_V[k] = x
 
-            # If we've reached the end of both strings → done
+            # Obiettivo raggiunto
             if x >= n and y >= m:
+                print("\n>>> RAGGIUNTO OBIETTIVO (fine di entrambe le stringhe)")
                 trace.append(new_V)
-                return reconstruct(a, b, trace)
+                return reconstruct_verbose(a, b, trace)
 
         trace.append(new_V)
         V = new_V
 
-    raise RuntimeError("Theoretically impossible to not find a diff")
 
-
-def reconstruct(a: str, b: str, trace):
-    """
-    Educational path reconstruction.
-    Follows the paper but in simplified form.
-    """
-
+def reconstruct_verbose(a: str, b: str, trace):
+    print("\n=== RICOSTRUZIONE DEL PERCORSO ===")
     edits = []
     x, y = len(a), len(b)
 
-    # Traverse depth levels backwards
     for d in reversed(range(len(trace))):
+        print(f"\n-- Risalgo livello d = {d} --")
         V = trace[d]
         k = x - y
+        print(f"  Coordinate attuali: (x={x}, y={y}), diagonale k={k}")
 
-        # Determine which diagonal we came from
+        # Determina la mossa precedente
         if k == -d:
             prev_k = k + 1
             prev_x = V[prev_k]
@@ -266,25 +255,34 @@ def reconstruct(a: str, b: str, trace):
 
         prev_y = prev_x - prev_k
 
-        # Add matches along the diagonal
+        print(f"  Provenivo da diagonale k={prev_k}")
+        print(f"  Punto precedente: (x={prev_x}, y={prev_y})")
+        print(f"  Operazione: {op}")
+
+        # Match lungo la diagonale
         while x > prev_x and y > prev_y:
-            edits.append(Edit("match", a[x - 1]))
+            print(f"    Match: {a[x-1]}")
+            edits.append(("match", a[x - 1]))
             x -= 1
             y -= 1
 
-        # Add the actual operation
+        # Operazione effettiva
         if op == "insert":
-            edits.append(Edit("insert", b[prev_y]))
+            print(f"    Insert: {b[prev_y]}")
+            edits.append(("insert", b[prev_y]))
             y -= 1
         else:
-            edits.append(Edit("delete", a[prev_x - 1]))
+            print(f"    Delete: {a[prev_x - 1]}")
+            edits.append(("delete", a[prev_x - 1]))
             x -= 1
 
-    return list(reversed(edits))
+    edits.reverse()
 
-    
-result = myers_diff("ABCABBA", "CBABAC")
-for e in result:
-    print(e)
+    print("\n=== DIFF FINALE ===")
+    for op, ch in edits:
+        print(f"{op.upper():7} {ch}")
+
+    return edits
 ```
 
+Example:`myers_diff_verbose("ABCD", "ABECD")`
