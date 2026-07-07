@@ -11,3 +11,4 @@ You’re going to build an online diff viewer that runs entirely in the browser.
 (The challenge): [https://www.linkedin.com/pulse/coding-challenge-125-online-diff-viewer-john-crickett-rgepf/]
 
 please note: we'll use anyway a backend with api not a integrated app.
+

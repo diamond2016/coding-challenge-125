@@ -1,4 +1,4 @@
-## Step 1
+## Step 0
 
 **backend**
 We'll use a python layer for the backend, hoping to exploit libraries and packages avalible. 
@@ -102,3 +102,36 @@ This means you never write manual fetch functions or define API interface types 
 
 
 07.07.2026: We have completed step 1- now study diff algorithm (we want to use existing libraries from python!)
+
+
+## Step 1
+In this step your goal is to compute and display a basic line-level diff between two text inputs.
+
+Create a simple interface with two text areas for input and a diff button. When the user clicks the button, your tool should compute the diff between the two inputs and display the result. Colour-code additions in green, deletions in red, and leave unchanged lines uncoloured or in a neutral colour.
+
+At this stage a simple vertical, unified-style output is fine - we'll add proper views in the next steps.
+
+Testing: Paste the following into your two inputs:
+
+```ts 
+// Left (original):
+function greet(name) {
+  console.log("Hello, " + name);
+}
+
+function farewell(name) {
+  console.log("Goodbye, " + name);
+}
+
+// Right (modified):
+
+function greet(name) {
+  console.log("Hello, " + name + "!");
+  console.log("Have a great day!");
+}
+
+function farewell(name) {
+  console.log("Goodbye, " + name + "!");
+}
+```
+You should see the added lines in green and any lines that exist only in the original in red. Unchanged lines like function greet(name) { should appear without colour.
