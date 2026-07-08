@@ -1,6 +1,6 @@
-def myers_diff_verbose(a: str, b: str) -> list[tuple[str, str]] | None:
+def myers_diff_verbose(a: str, b: str) -> list[tuple[str, int]] | None:
     n, m = len(a), len(b)
-    V = {0: 0}
+    v: dict[int, int] = {0: 0}
     trace: list[dict[int, int]]= []
 
     print("\n=== START MYERS ===")
@@ -25,17 +25,17 @@ def myers_diff_verbose(a: str, b: str) -> list[tuple[str, str]] | None:
                 x_start = 0
                 move = "start"
             elif k == -d:
-                x_start = V[k + 1]
+                x_start = v[k + 1]
                 move = "insert (→)"
             elif k == d:
-                x_start = V[k - 1] + 1
+                x_start = v[k - 1] + 1
                 move = "delete (↓)"
             else:
-                if V[k - 1] + 1 > V[k + 1]:
-                    x_start = V[k - 1] + 1
+                if V[k - 1] + 1 > v[k + 1]:
+                    x_start = v[k - 1] + 1
                     move = "delete (↓)"
                 else:
-                    x_start = V[k + 1]
+                    x_start = v[k + 1]
                     move = "insert (→)"
 
             y_start = x_start - k
@@ -58,16 +58,15 @@ def myers_diff_verbose(a: str, b: str) -> list[tuple[str, str]] | None:
             if x >= n and y >= m:
                 print("\n>>> OK TARGET")
                 trace.append(new_V)
-                return None
-                #return reconstruct_verbose(a, b, trace)
+                return reconstruct_verbose(a, b, trace)
 
         trace.append(new_V)
-        V = new_V
+        v = new_V
 
 
-def reconstruct_verbose(a: str, b: str, trace: list[dict[int, int]]) -> list[tuple[str, str]]:
+def reconstruct_verbose(a: str, b: str, trace: list[dict[int, int]]) -> list[tuple[str, int]]:
     print("\n=== RECONSTRUCT ===")
-    edits = []
+    edits: list[tuple[str,int]] = []
     x, y = len(a), len(b)
 
     for d in reversed(range(len(trace))):
