@@ -1,0 +1,175 @@
+class MyersDiff:
+    """
+    Implementation of the Myers Diff Algorithm (Forward-only version for simplicity).
+    
+    The algorithm finds the shortest edit script (SES) by traversing a grid of 
+    differences between two strings A and B. It uses a 'snake' approach to follow 
+    diagonal paths where characters match, minimizing the number of horizontal 
+    (insertion/deletion from A) and vertical (insertion/deletion from B) moves.
+    """
+
+    def __init__(self):
+        """
+        Initialize the core data structures used by the algorithm.
+        - self.v: A dictionary acting as a vector v[k] storing the X-coordinate 
+                  for each diagonal k at the current difference level D.
+        - self.trace: A list storing the history of the best diagonal (k) and 
+                      X-coordinate (x) reached at each difference level D.
+        """
+        self.v = {}
+        self.trace = []
+
+    def _get_v(self, k, default=0):
+        """
+        Helper to safely retrieve the X-coordinate for diagonal k from the vector v.
+        Returns 0 if the diagonal k has not been visited yet at the current step.
+        """
+        return self.v.get(k, default)
+
+    def _set_v(self, k, value):
+        """
+        Helper to store the X-coordinate for diagonal k in the vector v.
+        """
+        self.v[k] = value
+
+    def myers_traverse(self, a: str, b: str):
+        """
+        Executes the forward pass of the Myers Algorithm.
+        
+        Logic:
+        1. Iterate through difference levels d (from 1 to len(a) + len(b)).
+        2. For each level d, iterate through possible diagonals k (from -d to +d, step 2).
+        3. For each diagonal k, determine the starting point based on the previous level:
+           - If we come from diagonal k-1, we made a vertical move (advance in B).
+             The X-coordinate remains the same as v[k-1].
+           - If we come from diagonal k+1, we made a horizontal move (advance in A).
+             The X-coordinate becomes v[k+1] + 1.
+           - We choose the path that reached the furthest point in the grid.
+        4. Once the starting X is determined, perform a 'Snake' move:
+           Advance along the diagonal k as long as characters a[x] and b[y] match.
+        5. Record the furthest X reached for diagonal k in self.v.
+        6. Record the best diagonal k and its X for the current difference level d in self.trace.
+        7. Stop if we have reached the end of both strings.
+
+        Returns:
+            self.trace: A list of tuples (k, x) representing the path taken at each difference level.
+        """
+        len_a, len_b = len(a), len(b)
+        
+        # Reset structures for a new computation
+        self.v = {}
+        self.trace = []
+
+        # Initialization for d=0: Diagonal 0 starts at x=0
+        self.v[0] = 0
+        self.trace.append((0, 0))  
+
+        max_d = len_a + len_b
+        
+        for d in range(1, max_d + 1):
+            best_k = None
+            best_x = -1
+            
+            # Iterate diagonals k from d down to -d with step -2
+            # Diagonals are odd/even depending on d.
+            for k in range(d, -d - 1, -2):
+                # Determine the start point for diagonal k at level d
+                # Logic: 
+                # If k == -d, we must have come from k+1 (horizontal move) because k-1 doesn't exist.
+                # If k == d, we must have come from k-1 (vertical move) because k+1 doesn't exist.
+                # Otherwise, pick the move that gave the larger x coordinate.
+                
+                if k == -d or (k != d and self._get_v(k - 1) < self._get_v(k + 1)):
+                    # Came from k-1 (Vertical move in B): x stays the same
+                    x = self._get_v(k - 1)
+                else:
+                    # Came from k+1 (Horizontal move in A): x increases by 1
+                    x = self._get_v(k + 1) + 1
+
+                # Snake Move: Advance along diagonal k while characters match
+                # y = x - k
+                while x < len_a and (x - k) < len_b and a[x] == b[x - k]:
+                    x += 1
+                
+                # Update the vector v for this diagonal k
+                self._set_v(k, x)
+                
+                # Track the best diagonal that reached the furthest point for this d
+                if x > best_x:
+                    best_x = x
+                    best_k = k
+
+            # Record the best diagonal and its position for difference level d
+            self.trace.append((best_k, best_x))
+            
+            # Check if we reached the end of the grid
+            # y = x - k. If x == len_a and y == len_b, we are done.
+            if best_x == len_a and (best_x - best_k) == len_b:
+                break
+
+        return self.trace
+
+    def myers_diff(self, trace, a: str, b: str):
+        """
+        Reconstructs the diff operations from the trace generated by myers_traverse.
+        
+        Logic:
+        1. Start from the last element in the trace (the end of the strings).
+        2. Backtrack through the trace from the last difference level down to 0.
+        3. Compare the current state (k, x, y) with the previous state (prev_k, prev_x, prev_y).
+        4. Determine the operation based on the change in diagonals:
+           - If k == prev_k: The move was a 'Snake' (match). Record 'eq' for all characters traversed.
+           - If k != prev_k: It was an edit operation.
+             - If prev_k == k + 1: We moved vertically in the grid (y increased). 
+               This corresponds to deleting a character from A (or inserting into B).
+             - If prev_k == k - 1: We moved horizontally in the grid (x increased).
+               This corresponds to inserting a character into A (or deleting from B).
+        5. Since we backtrack from end to start, reverse the list of operations at the end.
+
+        Returns:
+            A list of tuples (operation_type, character) representing the diff.
+            Types: 'eq' (equal), 'del' (deleted from A), 'ins' (inserted into A / deleted from B).
+        """
+        if not trace:
+            return []
+
+        # Start at the end of the trace
+        last_idx = len(trace) - 1
+        last_k, last_x = trace[last_idx]
+        last_y = last_x - last_k
+        
+        diff_ops = []
+        d = last_idx
+        k, x = last_k, last_x
+        y = last_y
+        
+        # Backtrack through the trace
+        while d > 0:
+            prev_d = d - 1
+            prev_k, prev_x = trace[prev_d]
+            prev_y = prev_x - prev_k
+            
+            if k == prev_k:
+                # Snake move: Characters matched. Record equality for all steps taken.
+                for i in range(prev_x, x):
+                    diff_ops.append(('eq', a[i]))
+            else:
+                # Edit operation: Determine if it was a deletion or insertion
+                if k < prev_k:
+                    # Vertical move in grid (y increased): Character removed from A
+                    diff_ops.append(('del', a[prev_x]))
+                    y = prev_y + 1 # Logical update for backtracking
+                else:
+                    # Horizontal move in grid (x increased): Character inserted into A
+                    diff_ops.append(('ins', b[prev_y]))
+                    x = prev_x + 1 # Logical update for backtracking
+                    y = prev_y
+            
+            # Move to previous step
+            d = prev_d
+            k, x = prev_k, prev_x
+            y = prev_y
+
+        # Reverse to get chronological order
+        diff_ops.reverse()
+        return diff_ops
