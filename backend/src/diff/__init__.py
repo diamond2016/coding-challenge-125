@@ -1,1 +1,1 @@
-from .myers_diff_verbose import myers_diff_verbose
+from .MyersDiff import MyersDiff
