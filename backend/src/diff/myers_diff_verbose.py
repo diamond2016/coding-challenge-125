@@ -50,7 +50,7 @@ def myers_diff_verbose(a: str, b: str) -> list[tuple[str, str]] | None:
                 x += 1
                 y += 1
 
-            print(f"    End diag advance → (x={x}, y={y})")
+            print(f"    End diag advance → (x=x}, y={y})")
 
             new_V[k] = x
 
