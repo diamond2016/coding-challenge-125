@@ -136,4 +136,4 @@ function farewell(name) {
 ```
 You should see the added lines in green and any lines that exist only in the original in red. Unchanged lines like function greet(name) { should appear without colour.
 
-For this "step 1 approach" we'll use a very simplified version of Myers algorithm (suggested by @Copilot) in order to use an initial simple algorithm, implemented without python libraries, with only basic functions.
+For this "step 1 approach" we'll use a very simplified version of Myers algorithm the `forward-only' approach. We divide the phase of cosnstructions (which produces a trace) from reconstructions (which returns the operations and data in correct diff order)
