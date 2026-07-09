@@ -1,0 +1,119 @@
+class MyersDiff:
+    """
+    Simple forward-only Myers Diff algorithm.
+    Works on strings (character level or line level).
+    """
+    
+    def __init__(self):
+        # Trace stores a copy of the frontier (v) for every edit distance d
+        # This allows us to reconstruct the actual edit path later
+        self.trace: list[dict[int, int]] = []
+    
+    def myers_traverse(self, a: str, b: str) -> int:
+        """
+        Forward phase of Myers algorithm.
+        Explores the edit graph layer by layer (by edit distance d).
+        
+        Returns the final d (number of edits) when solution is found.
+        """
+        n = len(a)
+        m = len(b)
+        max_d = n + m
+        
+        # v[k] = farthest x reached on diagonal k with current d
+        # k = y - x  (diagonal identifier)
+        v: dict[int, int] = {1: 0}
+        
+        for d in range(max_d + 1):
+            # Save current state for backtracking
+            self.trace.append(v.copy())
+            
+            # Explore all possible diagonals for this d
+            # Step by 2 because parity is preserved (k and d must have same parity)
+            for k in range(-d, d + 1, 2):
+                
+                # Decide whether we come from delete (right) or insert (down)
+                if k == -d or (k != d and v.get(k - 1, -1) < v.get(k + 1, -1)):
+                    # Came from insert (vertical move)
+                    x = v.get(k + 1, 0)
+                else:
+                    # Came from delete (horizontal move)
+                    x = v.get(k - 1, 0) + 1
+                
+                y = x - k
+                
+                # Extend the "snake" - follow diagonal as long as characters match
+                # These moves are free (don't increase edit count)
+                while x < n and y < m and a[x] == b[y]:
+                    x += 1
+                    y += 1
+                
+                v[k] = x
+                
+                # Solution found!
+                if x >= n and y >= m:
+                    return d  # This is the minimal number of edits
+        
+        return -1  # Should never happen
+    
+    def myers_diff(self, a: str, b: str) -> list[tuple[str, str]]:
+        """
+        Computes the diff between two strings.
+        
+        Returns a list of tuples:
+            ('equal',  char)
+            ('delete', char)
+            ('insert', char)
+            
+        The list is in forward order (from start to end).
+        """
+        # Reset trace for new diff
+        self.trace = []
+        
+        final_d = self.myers_traverse(a, b)
+        if final_d == -1:
+            raise ValueError("Failed to compute diff")
+        
+        # Backtracking phase - reconstruct the path
+        diffs: list[tuple[str, str]] = []
+        x = len(a)
+        y = len(b)
+        
+        # Go backwards through the trace
+        for d in range(final_d, -1, -1):
+            v = self.trace[d]
+            k = x - y
+            
+            # Determine where we came from
+            if k == -d or (k != d and v.get(k - 1, -1) < v.get(k + 1, -1)):
+                prev_k = k + 1
+                prev_x = v.get(prev_k, 0)
+                prev_y = prev_x - prev_k
+                came_from = 'insert'
+            else:
+                prev_k = k - 1
+                prev_x = v.get(prev_k, 0)
+                prev_y = prev_x - prev_k
+                came_from = 'delete'
+            
+            # First, consume all diagonal (equal) moves
+            while x > prev_x and y > prev_y:
+                x -= 1
+                y -= 1
+                diffs.append(('equal', a[x]))
+            
+            # Then the single edit move (if not at start)
+            if d > 0:
+                if came_from == 'insert':
+                    y -= 1
+                    diffs.append(('insert', b[y]))
+                else:
+                    x -= 1
+                    diffs.append(('delete', a[x]))
+            
+            # Move to previous position
+            x, y = prev_x, prev_y
+        
+        # We built the path backwards, so reverse it
+        diffs.reverse()
+        return diffs
