@@ -1,7 +1,7 @@
 <template>
     <header class="app-header">
         <div class="logo">
-            <router-link to="/"><img src="@/assets/logo.svg" alt="Task Manager Logo"></router-link>
+            <router-link to="/"><img src="@/assets/logo.svg" alt="Diff Manager Logo"></router-link>
         </div>
         <nav class="header-nav">
             <router-link to="/load-text1" class="router-button">
