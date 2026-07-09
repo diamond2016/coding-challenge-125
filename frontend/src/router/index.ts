@@ -1,0 +1,18 @@
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: '/',
+    component: () => import('@/views/HomeView.vue'),
+  },
+  {
+    path: '/diff-viewer',
+    component: () => import('@/views/DiffManager.vue'),
+  },
+
+]
+
+export const router = createRouter({
+  history: createWebHistory(),
+  routes,
+})
