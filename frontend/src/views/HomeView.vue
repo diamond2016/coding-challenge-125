@@ -3,7 +3,7 @@
     <h1>Welcome to Diff Viewer</h1>
     <p class="subtitle">Your personal online diff viewer</p>
 
-    <router-link to="/diff-viewer" class="cta-button">
+    <router-link to="/diff-manager" class="cta-button">
       Get Started
     </router-link>
   </div>
