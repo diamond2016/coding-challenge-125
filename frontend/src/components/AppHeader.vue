@@ -26,7 +26,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 15px 30px;
-    background-color: #2c3e50; /* Dark blue/grey background */
+    background-color: #2d59aa; /* Dark blue/grey background */
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: sticky;

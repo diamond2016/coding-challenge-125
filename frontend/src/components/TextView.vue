@@ -51,7 +51,7 @@ watch(
   flex-direction: column;
   flex: 1;
   min-width: 0;
-  border-radius: 12px;
+  border-radius: 6px;
   overflow: hidden;
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.06);
@@ -69,8 +69,8 @@ watch(
 
 .text-area-header {
   padding: 14px 18px;
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  border-bottom: 3px solid #3498db;
+  background: linear-gradient(135deg, #8296a9 0%, #34495e 100%);
+  border-bottom: 3px solid #cbeca2;
   display: flex;
   align-items: center;
   gap: 10px;

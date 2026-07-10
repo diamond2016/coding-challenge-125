@@ -4,11 +4,10 @@
     <div class="main-content-area">
       <div class="left-column">
         <Text1View />
-        <DiffView />
+        <Text2View />
       </div>
       <div class="right-column">
-        <Text2View />
-        <DiffOpView />
+        <DiffView />
       </div>
     </div>
   </div>
@@ -16,10 +15,9 @@
 
 <script setup lang="ts">
   import AppHeader from '@/components/AppHeader.vue';
-  import Text1View from '@/components/Text1View.vue';
-  //import Text2View from '@/components/Text2View.vue';
-  //import DiffView from '@/components/DiffView.vue';
-  //import DiffOpView from '@/components/DiffOpView.vue';
+  import Text1View from '@/components/TextView.vue';
+  import Text2View from '@/components/TextView.vue';
+  import DiffView from '@/components/TextView.vue';
 </script>
 
 <style scoped>

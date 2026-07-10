@@ -6,7 +6,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/HomeView.vue'),
   },
   {
-    path: '/diff-viewer',
+    path: '/diff-manager',
     component: () => import('@/views/DiffManager.vue'),
   },
 
