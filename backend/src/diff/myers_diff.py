@@ -118,6 +118,22 @@ class MyersDiff:
         diffs.reverse()
         return diffs
 
+    def myers_diff_prettyp(self, a: str, b: str) -> str | None:
+        result: list[tuple[str, str]] = self.myers_diff(a, b)
+        result_str: str = ""
+        if result:
+    # Colour-code additions in green, deletions in red, and leave unchanged lines cyan for matches
+            for oper, c in result:
+                if (oper == 'insert'):
+                    result_str = result_str + self.colorize_string(1, c)
+                elif (oper == 'delete'):
+                    result_str = result_str + self.colorize_string(0, c)
+                elif (oper == 'equal'):
+                    result_str = result_str + self.colorize_string(6, c)
+            return result_str
+        
+        return None
+    
     def diff_text(self, text1: str, text2: str, by_lines: bool = True) -> list[tuple[str, str]]:
         """
         Convenient method to diff two strings.
@@ -141,3 +157,28 @@ class MyersDiff:
         Returns list of ('equal'|'delete'|'insert', line)
         """
         return self.diff_text(text1, text2, by_lines=True)
+    
+
+    def colorize_string(self, index: int, c: str) -> str:
+        # Python program to color each character of a string individually
+        # ANSI color codes for foreground text
+        COLORS: list[str] = [
+            "\033[31m",  # Red     0
+            "\033[32m",  # Green   1
+            "\033[33m",  # Yellow  2
+            "\033[34m",  # Blue    3
+            "\033[35m",  # Magenta 4 
+            "\033[36m",  # Cyan    5
+            "\033[37m",  # White   6
+        ]
+
+        RESET = "\033[0m"  # Reset to default color
+        """
+        Color each character of the string in a repeating pattern.
+        """
+
+        colored_chars: str = ""
+        color: str = COLORS[index]
+        colored_chars = colored_chars + (f"{color}{c}{RESET}")
+
+        return colored_chars

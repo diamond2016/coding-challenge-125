@@ -24,12 +24,12 @@ app.add_middleware(
 
 
 @app.get("/health")
-def health_check():
+def health_check() -> dict[str, str]:
     """Health check endpoint to verify backend status."""
     return {"status": "healthy", "service": "online-diff-viewer-api"}
 
 
 @app.get("/")
-def read_root():
+def read_root() -> dict[str, str]:
     """Welcome endpoint."""
     return {"message": "Welcome to the Online Diff Viewer API!"}
