@@ -79,9 +79,8 @@ watch(
 .text-area-label {
   font-weight: 600;
   color: #ecf0f1;
-  font-size: 15px;
+  font-size: 12px;
   letter-spacing: 0.5px;
-  text-transform: uppercase;
 }
 
 .text-area-label::before {

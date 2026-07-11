@@ -3,24 +3,40 @@
     <AppHeader />
     <div class="main-content-area">
       <div class="left-column">
-        <Text1View />
-        <Text2View />
+        <Text1View
+          v-model="text1Value"
+          :label="text1Label"
+        />
+        <Text2View
+          v-model="text2Value"
+          :label="text2Label"
+        />
       </div>
       <div class="right-column">
-        <DiffView v-model="diffValue" @update:modelValue="handleDiffUpdate" />
+        <DiffView v-model="textDiffValue" :label=textDiffLabel @update:modelValue="handleDiffUpdate" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+  import { ref, onMounted } from 'vue';
   import AppHeader from '@/components/AppHeader.vue';
   import Text1View from '@/components/TextView.vue';
   import Text2View from '@/components/TextView.vue';
-  import DiffView from '@/components/DiffView.vue';
+  import DiffView from '@/components/TextView.vue';
 
-  // Reactive state to hold the diff result
-  const diffValue = ref<string | null>(null);
+  // Reactive state for text inputs
+  const text1Value = ref<string>('');
+  const text2Value = ref<string>('');
+
+  // Labels for the text areas
+  const text1Label = ref<string>('Original Text');
+  const text2Label = ref<string>('Modified Text');
+
+   // Reactive state to hold the diff result
+  const textDiffLabel = ref<string>('Diff');
+  const textDiffValue = ref<string | null>('');
 
   // Helper function to handle update:modelValue event from DiffView
   const handleDiffUpdate = (value: string | null) => {
@@ -48,9 +64,27 @@
     }
 
     // Update the reactive state
-    diffValue.value = value;
+    textDiffValue.value = value;
     console.log('=== DiffManager: State updated ===');
   };
+
+  // Initialize text values and labels on mount
+  onMounted(() => {
+    console.log('=== DiffManager: Component mounted ===');
+
+    // Set initial text values
+    text1Value.value = 'Hello World!';
+    text2Value.value = 'Hello Vue!';
+
+    // Set initial labels
+    text1Label.value = 'Original Text';
+    text2Label.value = 'Modified Text';
+
+    console.log('Initial text1Value:', text1Value.value);
+    console.log('Initial text2Value:', text2Value.value);
+    console.log('Initial text1Label:', text1Label.value);
+    console.log('Initial text2Label:', text2Label.value);
+  });
 </script>
 
 <style scoped>

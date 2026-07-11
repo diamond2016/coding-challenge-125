@@ -12,7 +12,7 @@ Layout as follows
 <logo>   <Load text1> <Load Text2>  <Diff>      <--- header
 - - - - - - - - - - - - - - - - - - - - - 
 
-text area 1     |   text area 2 
+text area 1     |   text area diff
                 |
                 |
                 |
@@ -20,7 +20,7 @@ text area 1     |   text area 2
                 |
                 |
 
-text area diff  |   list operations
+text area 2   |   
                 |
                 !
                 |
@@ -32,4 +32,4 @@ text area diff  |   list operations
 - - - - - - - - - - - - - - - - - - - - - 
 heeder: component with the three buttons: "Load text 1". "Load text 2", "Diff"
 text area 1, text area 2, text area diff: three components, same size, which contains only a single text field, capabie of multiline 
-list operations same size of text area but list item that will contain the list of operations of tipe "op" "text"
+
