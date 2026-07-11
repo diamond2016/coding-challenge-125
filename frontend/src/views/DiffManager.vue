@@ -1,6 +1,6 @@
 <template>
   <div class="task-manager-layout">
-    <AppHeader />
+    <AppHeader :onDiffClick="handleDiffClick" />
     <div class="main-content-area">
       <div class="left-column">
         <Text1View
@@ -84,6 +84,12 @@
     // Update the reactive state
     textDiffValue.value = value;
     console.log('=== DiffManager: State updated ===');
+  };
+
+  // Helper function to handle Diff button click
+  const handleDiffClick = async () => {
+    console.log('=== DiffManager: Diff button clicked ===');
+    await postDiff();
   };
 
   // Initialize text values and labels on mount
