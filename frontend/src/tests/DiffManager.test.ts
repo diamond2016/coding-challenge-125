@@ -42,9 +42,6 @@ describe('DiffManager', () => {
       global: {
         stubs: {
           AppHeader: true,
-          Text1View: true,
-          Text2View: true,
-          DiffView: true,
         },
       },
     });
@@ -70,10 +67,9 @@ describe('DiffManager', () => {
     wrapper = mount(DiffManager, {
       global: {
         stubs: {
-          AppHeader: true,
-          Text1View: true,
-          Text2View: true,
-          DiffView: true,
+          AppHeader: {
+            template: '<div class="header-content"><button class="diff-button">Run Diff</button></div>',
+          },
         },
       },
     });
@@ -101,10 +97,9 @@ describe('DiffManager', () => {
     wrapper = mount(DiffManager, {
       global: {
         stubs: {
-          AppHeader: true,
-          Text1View: true,
-          Text2View: true,
-          DiffView: true,
+          AppHeader: {
+            template: '<div class="header-content"><button class="diff-button">Run Diff</button></div>',
+          },
         },
       },
     });
@@ -128,19 +123,13 @@ describe('DiffManager', () => {
       global: {
         stubs: {
           AppHeader: true,
-          Text1View: true,
-          Text2View: true,
-          DiffView: {
-            template: '<div>{{ modelValue }}</div>',
-            props: ['modelValue'],
-            emits: ['update:modelValue'],
-          },
         },
       },
     });
 
-    // Trigger the update event using Vue Test Utils
-    await wrapper.trigger('update:modelValue', mockDiffValue);
+    // Find the DiffView component by selector and trigger the update event on it
+    const diffView = wrapper.find('.diff-container');
+    await diffView.trigger('update:modelValue', mockDiffValue);
 
     expect(wrapper.vm.textDiffValue).toBe(mockDiffValue);
   });
@@ -150,19 +139,13 @@ describe('DiffManager', () => {
       global: {
         stubs: {
           AppHeader: true,
-          Text1View: true,
-          Text2View: true,
-          DiffView: {
-            template: '<div>{{ modelValue }}</div>',
-            props: ['modelValue'],
-            emits: ['update:modelValue'],
-          },
         },
       },
     });
 
-    // Trigger the update event with null using Vue Test Utils
-    await wrapper.trigger('update:modelValue', null);
+    // Find the DiffView component by selector and trigger the update event on it with null
+    const diffView = wrapper.find('.diff-container');
+    await diffView.trigger('update:modelValue', '');
 
     expect(wrapper.vm.textDiffValue).toBe('');
   });

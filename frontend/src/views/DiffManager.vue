@@ -22,9 +22,9 @@
 <script setup lang="ts">
   import { ref, onMounted } from 'vue';
   import AppHeader from '@/components/AppHeader.vue';
-  import Text1View from '@/components/TextView.vue';
-  import Text2View from '@/components/TextView.vue';
-  import DiffView from '@/components/TextView.vue';
+  import Text1View from '@/components/Text1View.vue';
+  import Text2View from '@/components/Text2View.vue';
+  import DiffView from '@/components/DiffView.vue';
 
   // all for api dif-prettyp
   import { DefaultApi } from '@/api/client/api'
