@@ -26,6 +26,24 @@
   import Text2View from '@/components/TextView.vue';
   import DiffView from '@/components/TextView.vue';
 
+  // all for api dif-prettyp
+  import { DefaultApi } from '@/api/client/api'
+  import type { DiffPrettypRequest, DiffPrettypResponse } from '@/api/client';
+  import { Configuration } from '@/api/client/configuration'
+  const apiConfig = new Configuration({
+  basePath: 'http://localhost:8000/api', // Base URL of the diff API
+  });
+
+
+  const postDiff = async () => {
+  try {
+    const request: DiffPrettypRequest = {"string_a": text1Value.value, "string_b": text2Value.value }
+    const response: DiffPrettypResponse = await (new DefaultApi(apiConfig)).apiDiffPrettypPost(request)
+    textDiffValue.value = response.diff
+  } catch (error) {
+    console.error('Error from post diff-prettyp:', error)
+  }
+}
   // Reactive state for text inputs
   const text1Value = ref<string>('');
   const text2Value = ref<string>('');
@@ -36,10 +54,10 @@
 
    // Reactive state to hold the diff result
   const textDiffLabel = ref<string>('Diff');
-  const textDiffValue = ref<string | null>('');
+  const textDiffValue = ref<string>('');
 
   // Helper function to handle update:modelValue event from DiffView
-  const handleDiffUpdate = (value: string | null) => {
+  const handleDiffUpdate = (value: string) => {
     console.log('=== DiffManager: Received update:modelValue event ===');
     console.log('Event type: update:modelValue');
     console.log('Received value:', value);

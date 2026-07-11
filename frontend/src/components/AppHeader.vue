@@ -4,20 +4,21 @@
             <router-link to="/"><img src="@/assets/logo.svg" alt="Diff Manager Logo"></router-link>
         </div>
         <nav class="header-nav">
-            <router-link to="/load-text1" class="router-button">
-                Load text #1
+            <router-link to="/diff-prettyp" class="router-button">
+                Diff
             </router-link>
-            <router-link to="/load-text2" class="router-button">
-                Load text #2
-            </router-link>
-            <router-link to="/diff" class="router-button">
-                Diff #1 #2
-            </router-link>
+            <button v-if="onDiffClick" class="diff-button" @click="onDiffClick">
+                Run Diff
+            </button>
         </nav>
     </header>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+  // Props to allow parent component to provide a callback
+  defineProps<{
+    onDiffClick?: () => void
+  }>();
 </script>
 
 <style lang="css" scoped>
@@ -55,5 +56,20 @@
 
 .router-button:hover {
     background-color: #34495e; /* Slightly lighter on hover */
+}
+
+.diff-button {
+    color: white;
+    background-color: #27ae60;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.diff-button:hover {
+    background-color: #2ecc71;
 }
 </style>

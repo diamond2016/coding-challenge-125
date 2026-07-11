@@ -15,6 +15,11 @@ class DiffPrettypRequest(BaseModel):
 # Response model
 class DiffPrettypResponse(BaseModel):
     diff: Optional[str]
+
+# Validation error
+class HTTPValidationError(BaseModel):
+    message: str
+
 app = FastAPI(
     title="Online Diff Viewer API",
     description="API backend for computing diffs, managing sessions, and fetching external files.",
@@ -61,7 +66,10 @@ async def diff_prettyp(request: DiffPrettypRequest):
     - Green (1): inserted characters  
     - Cyan (6): equal characters
     """
-    result = diff_obj.myers_diff_prettyp(request.string_a, request.string_b)
+    result: str | None = diff_obj.myers_diff_prettyp(request.string_a, request.string_b)
+    if not result:
+        return HTTPValidationError(message="error in producing diff, check request body")
+    
     return DiffPrettypResponse(diff=result)
 
 if __name__ == '__main__':

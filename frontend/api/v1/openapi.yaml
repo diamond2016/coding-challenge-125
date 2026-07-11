@@ -1,0 +1,57 @@
+openapi: 3.0.3
+info:
+  title: diff API
+  version: 1.0.0
+
+paths:
+
+  /api/diff-prettyp:
+    post:
+      summary: make a diff (Myers) from two text input
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiffPrettypRequest'
+      responses:
+        '200':
+          description: Diff result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiffPrettypResponse'
+        '422':
+          description: Validation error - check format of request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+
+components:
+  schemas:
+
+    DiffPrettypResponse:
+      type: object
+      properties:
+        diff:
+          type: string
+      required: [diff]
+
+    DiffPrettypRequest:
+      type: object
+      properties:
+        string_a:
+          type: string
+          example: "abcd"
+        string_b:
+          type: string
+          example: "abecd"
+      required: [string_a, string_b]
+
+    HTTPValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]

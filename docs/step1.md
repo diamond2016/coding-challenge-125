@@ -33,3 +33,4 @@ text area 2   |
 heeder: component with the three buttons: "Load text 1". "Load text 2", "Diff"
 text area 1, text area 2, text area diff: three components, same size, which contains only a single text field, capabie of multiline 
 
+We create a client for backend api diff-prettyp using openapi-generator-cli (created manually the openapi.yaml)
