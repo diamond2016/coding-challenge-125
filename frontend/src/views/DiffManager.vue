@@ -40,6 +40,7 @@
     try { 
       const response = await (new DefaultApi(apiConfig).apiDiffPrettypPost(request))
       textDiffValue.value = response.data.diff
+      console.log("received from api ", response.data)
       console.log('=== diff-prettyp: Received diff from api ===');
     }
     catch ( error) {

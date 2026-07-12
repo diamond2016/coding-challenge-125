@@ -3,9 +3,7 @@
     <div class="diff-header">
       <span class="diff-label">{{ label }}</span>
     </div>
-    <div class="diff-content" ref="diffContentRef">
-      <pre class="diff-text">{{ modelValue }}</pre>
-    </div>
+    <div class="diff-content" ref="diffContentRef"></div>
   </div>
 </template>
 
@@ -34,17 +32,26 @@ const parseAndApplyColors = (text: string) => {
   let i = 0;
   
   while (i < text.length) {
-    const escapeSequence = text.substring(i);
-    const ansiCodeMatch = escapeSequence.match(/^\\033\[(\d+)m/);
-    
-    if (ansiCodeMatch) {
-      const code = parseInt(ansiCodeMatch[1], 10);
-      result += `<span class="ansi-code ansi-${code}" data-code="${code}">${text[i + ansiCodeMatch[0].length]}</span>`;
-      i += ansiCodeMatch[0].length;
-    } else {
+    // Check for ANSI escape sequence: ESC [ n m (ESC = ASCII 27)
+    // Use charCodeAt to check for actual escape character
+    if (text.charCodeAt(i) === 27 && text[i + 1] === '[') {
+      // Found ESC [, now extract the code
+      let j = i + 2;
+      while (j < text.length && text.charCodeAt(j) !== 109) { // 109 = 'm'
+        j++;
+      }
+      if (j < text.length) {
+        const code = parseInt(text.substring(i + 2, j), 10);
+        result += `<span class=\"ansi-code ansi-${code}\" data-code=\"${code}\">${text[j]}</span>`;
+        i = j + 1;
+      } else {
       result += text[i];
       i++;
     }
+    } else {
+      result += text[i];
+      i++;
+  }
   }
   
   return result;
@@ -179,3 +186,4 @@ watch(() => props.modelValue, (newValue) => {
   background: #8e44ad;
 }
 </style>
+
