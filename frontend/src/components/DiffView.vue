@@ -28,13 +28,39 @@ const diffContentRef = ref<HTMLElement | null>(null);
 const parseAndApplyColors = (text: string) => {
   if (!text) return '';
   
+  console.log('=== parseAndApplyColors called ===');
+  console.log('Input text:', text);
+  console.log('Input text length:', text.length);
+  console.log('First char code:', text.charCodeAt(0));
+  console.log('Char at position 0 (hex):', text.charCodeAt(0).toString(16));
+  console.log('Char at position 1:', text.charCodeAt(1));
+  console.log('Char at position 2:', text.charCodeAt(2));
+  console.log('Char at position 3:', text.charCodeAt(3));
+  console.log('Char at position 4:', text.charCodeAt(4));
+  console.log('Char at position 5:', text.charCodeAt(5));
+  console.log('Char at position 6:', text.charCodeAt(6));
+  console.log('Char at position 7:', text.charCodeAt(7));
+  console.log('Char at position 8:', text.charCodeAt(8));
+  console.log('Char at position 9:', text.charCodeAt(9));
+  console.log('Char at position 10:', text.charCodeAt(10));
+  console.log('Char at position 11:', text.charCodeAt(11));
+  console.log('Char at position 12:', text.charCodeAt(12));
+  console.log('Char at position 13:', text.charCodeAt(13));
+  console.log('Char at position 14:', text.charCodeAt(14));
+  console.log('Char at position 15:', text.charCodeAt(15));
+  console.log('Char at position 16:', text.charCodeAt(16));
+
   let result = '';
   let i = 0;
   
   while (i < text.length) {
     // Check for ANSI escape sequence: ESC [ n m (ESC = ASCII 27)
-    // Use charCodeAt to check for actual escape character
-    if (text.charCodeAt(i) === 27 && text[i + 1] === '[') {
+    const isEscape = text.charCodeAt(i) === 27;
+    const isBracket = text[i + 1] === '[';
+
+    console.log(`Position ${i}: char='${text[i]}' code=${text.charCodeAt(i)} (${text.charCodeAt(i).toString(16)}) isEscape=${isEscape} isBracket=${isBracket}`);
+
+    if (isEscape && isBracket) {
       // Found ESC [, now extract the code
       let j = i + 2;
       while (j < text.length && text.charCodeAt(j) !== 109) { // 109 = 'm'
@@ -42,8 +68,11 @@ const parseAndApplyColors = (text: string) => {
       }
       if (j < text.length) {
         const code = parseInt(text.substring(i + 2, j), 10);
-        result += `<span class=\"ansi-code ansi-${code}\" data-code=\"${code}\">${text[j]}</span>`;
-        i = j + 1;
+        // Get the character AFTER the 'm' (not the 'm' itself)
+        const charAfterM = text[j + 1] || '';
+        console.log(`Found escape sequence: code=${code}, charAfterM='${charAfterM}'`);
+        result += `<span class=\"ansi-code ansi-${code}\" data-code=\"${code}\">${charAfterM}</span>`;
+        i = j + 2;
       } else {
       result += text[i];
       i++;
@@ -54,6 +83,7 @@ const parseAndApplyColors = (text: string) => {
   }
   }
   
+  console.log('Output HTML:', result);
   return result;
 };
 
