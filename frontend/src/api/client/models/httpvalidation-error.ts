@@ -15,6 +15,6 @@
 
 
 export interface HTTPValidationError {
-    'message': string;
+    'detail': string;
 }
 

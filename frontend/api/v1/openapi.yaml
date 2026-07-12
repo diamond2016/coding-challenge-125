@@ -52,6 +52,6 @@ components:
     HTTPValidationError:
       type: object
       properties:
-        message:
+        detail:
           type: string
-      required: [message]
+      required: [detail]

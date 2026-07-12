@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
@@ -67,10 +67,8 @@ async def diff_prettyp(request: DiffPrettypRequest):
     - Cyan (6): equal characters
     """
     result: str | None = diff_obj.myers_diff_prettyp(request.string_a, request.string_b)
-    if not result:
-        return HTTPValidationError(message="error in producing diff, check request body")
-    
     return DiffPrettypResponse(diff=result)
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
+

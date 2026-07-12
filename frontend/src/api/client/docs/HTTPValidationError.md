@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**message** | **string** |  | [default to undefined]
+**detail** | **string** |  | [default to undefined]
 
 ## Example
 
@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 import { HTTPValidationError } from '@it.diamondnet/coding-challenge-125';
 
 const instance: HTTPValidationError = {
-    message,
+    detail,
 };
 ```
 

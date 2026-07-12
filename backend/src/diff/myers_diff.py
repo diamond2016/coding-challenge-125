@@ -119,6 +119,9 @@ class MyersDiff:
         return diffs
 
     def myers_diff_prettyp(self, a: str, b: str) -> str | None:
+        if (not len(a) ) or (not len(b)):
+            return None
+        
         result: list[tuple[str, str]] = self.myers_diff(a, b)
         result_str: str = ""
         if result:

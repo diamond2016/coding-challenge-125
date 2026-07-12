@@ -28,22 +28,25 @@
 
   // all for api dif-prettyp
   import { DefaultApi } from '@/api/client/api'
-  import type { DiffPrettypRequest, DiffPrettypResponse } from '@/api/client';
+  import type { DiffPrettypRequest, DiffPrettypResponse, HTTPValidationError } from '@/api/client';
   import { Configuration } from '@/api/client/configuration'
   const apiConfig = new Configuration({
-  basePath: 'http://localhost:8000/api', // Base URL of the diff API
+  basePath: 'http://localhost:8000', // Base URL of the diff API
   });
 
 
   const postDiff = async () => {
-  try {
     const request: DiffPrettypRequest = {"string_a": text1Value.value, "string_b": text2Value.value }
-    const response: DiffPrettypResponse = await (new DefaultApi(apiConfig)).apiDiffPrettypPost(request)
-    textDiffValue.value = response.diff
-  } catch (error) {
-    console.error('Error from post diff-prettyp:', error)
+    try { 
+      const response = await (new DefaultApi(apiConfig).apiDiffPrettypPost(request))
+      textDiffValue.value = response.data.diff
+      console.log('=== diff-prettyp: Received diff from api ===');
+    }
+    catch ( error) {
+      console.log ('Error in diff-prettyp ', error)
+    }
   }
-}
+  
   // Reactive state for text inputs
   const text1Value = ref<string>('');
   const text2Value = ref<string>('');
