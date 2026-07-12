@@ -4,9 +4,6 @@ from pydantic import BaseModel
 from typing import Optional
 from src.diff.myers_diff import MyersDiff
 
-from fastapi.responses import JSONResponse
-import json
-
 app = FastAPI(title="Diff API", version="1.0.0")
 
 # Request model

@@ -12,4 +12,4 @@ You’re going to build an online diff viewer that runs entirely in the browser.
 
 
 12.07.2026 completed step1. See picture:
-![example diff - step1](home-step1.png)
+![example diff - step1](home-step1.png) 
