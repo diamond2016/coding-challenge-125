@@ -34,3 +34,5 @@ heeder: component with the three buttons: "Load text 1". "Load text 2", "Diff"
 text area 1, text area 2, text area diff: three components, same size, which contains only a single text field, capabie of multiline 
 
 We create a client for backend api diff-prettyp using openapi-generator-cli (created manually the openapi.yaml)
+
+120726: change of strategy we produce html in backend with the proper coloring and we render this html in frontend. The API diff-prettyp will produce this structured text not plain text with escape sequences.
