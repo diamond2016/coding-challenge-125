@@ -11,4 +11,5 @@ You’re going to build an online diff viewer that runs entirely in the browser.
 (The challenge): [https://www.linkedin.com/pulse/coding-challenge-125-online-diff-viewer-john-crickett-rgepf/]
 
 
-
+12.07.2026 completed step1. See picture:
+![example diff - step1](home-step1.png)
