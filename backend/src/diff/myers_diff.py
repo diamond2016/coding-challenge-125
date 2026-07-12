@@ -119,23 +119,24 @@ class MyersDiff:
         return diffs
 
     def myers_diff_prettyp(self, a: str, b: str) -> str | None:
-        if (not len(a) ) or (not len(b)):
+        if not a or not b:
             return None
         
         result: list[tuple[str, str]] = self.myers_diff(a, b)
-        result_str: str = ""
-        if result:
-    # Colour-code additions in green, deletions in red, and leave unchanged lines cyan for matches
-            for oper, c in result:
-                if (oper == 'insert'):
-                    result_str = result_str + self.colorize_string(1, c)
-                elif (oper == 'delete'):
-                    result_str = result_str + self.colorize_string(0, c)
-                elif (oper == 'equal'):
-                    result_str = result_str + self.colorize_string(6, c)
-            return result_str
+        if not result:
+            return None
+            
+        # Colour-code additions in green, deletions in red, and leave unchanged lines cyan for matches
+        html_parts: list[str] = []
+        for oper, c in result:
+            if oper == 'insert':
+                html_parts.append(self.colorize_string(1, c))
+            elif oper == 'delete':
+                html_parts.append(self.colorize_string(0, c))
+            elif oper == 'equal':
+                html_parts.append(self.colorize_string(6, c))
         
-        return None
+        return ''.join(html_parts)
     
     def diff_text(self, text1: str, text2: str, by_lines: bool = True) -> list[tuple[str, str]]:
         """
@@ -163,25 +164,31 @@ class MyersDiff:
     
 
     def colorize_string(self, index: int, c: str) -> str:
-        # Python program to color each character of a string individually
-        # ANSI color codes for foreground text
-        COLORS: list[str] = [
-            "\033[31m",  # Red     0
-            "\033[32m",  # Green   1
-            "\033[33m",  # Yellow  2
-            "\033[34m",  # Blue    3
-            "\033[35m",  # Magenta 4 
-            "\033[36m",  # Cyan    5
-            "\033[37m",  # White   6
-        ]
-
-        RESET = "\033[0m"  # Reset to default color
         """
-        Color each character of the string in a repeating pattern.
+        Color each character of the string and return HTML.
+        
+        Args:
+            index: Color index (0=red, 1=green, 6=cyan, etc.)
+            c: Character to colorize
+            
+        Returns:
+            HTML span with inline styles for the colored character
         """
-
-        colored_chars: str = ""
-        color: str = COLORS[index]
-        colored_chars = colored_chars + (f"{color}{c}{RESET}")
-
-        return colored_chars
+        # Color mapping: (foreground, background) in hex
+        COLORS: dict[int, tuple[str, str]] = {
+            0: ("#e74c3c", "#fadbd8"),  # Red - deleted
+            1: ("#27ae60", "#d5f5e3"),  # Green - inserted
+            2: ("#f39c12", "#fdebd0"),  # Yellow
+            3: ("#3498db", "#d6eaf8"),  # Blue
+            4: ("#9b59b6", "#e8daef"),  # Magenta
+            5: ("#1abc9c", "#d1f2eb"),  # Cyan
+            6: ("#7f8c8d", "#f2f6f4"),  # White - equal
+        }
+        
+        color = COLORS.get(index, COLORS[6])  # Default to white/equal
+        fg, bg = color
+        
+        # Escape HTML special characters
+        escaped_c = c.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        
+        return f'<span style="color:{fg};background-color:{bg};font-family:monospace">{escaped_c}</span>'

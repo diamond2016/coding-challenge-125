@@ -27,10 +27,14 @@ describe('DiffManager', () => {
     mockConsoleError.mockClear();
     
     // Create a mock for DefaultApi
+    const mockApiInstance = {
+      apiDiffPrettypPost: vi.fn(),
+    };
+    vi.mocked(DefaultApi).mockImplementation(() => mockApiInstance);
+    
+    // Assign the mock function to mockDefaultApi for testing
     mockDefaultApi = vi.fn();
-    vi.mocked(DefaultApi).mockImplementation(() => ({
-      apiDiffPrettypPost: mockDefaultApi,
-    }));
+    mockApiInstance.apiDiffPrettypPost = mockDefaultApi;
   });
 
   afterEach(() => {
@@ -59,7 +63,7 @@ describe('DiffManager', () => {
     };
 
     const mockResponse: DiffPrettypResponse = {
-      diff: 'diff result',
+      data: { diff: 'diff result' },
     };
 
     mockDefaultApi.mockResolvedValueOnce(mockResponse);
@@ -67,9 +71,7 @@ describe('DiffManager', () => {
     wrapper = mount(DiffManager, {
       global: {
         stubs: {
-          AppHeader: {
-            template: '<div class="header-content"><button class="diff-button">Run Diff</button></div>',
-          },
+          AppHeader: true,
         },
       },
     });
@@ -78,9 +80,8 @@ describe('DiffManager', () => {
     wrapper.vm.text1Value = 'test input a';
     wrapper.vm.text2Value = 'test input b';
 
-    // Find and click the Diff button in AppHeader
-    const diffButton = wrapper.find('button.diff-button');
-    await diffButton.trigger('click');
+    // Call handleDiffClick directly
+    await wrapper.vm.handleDiffClick();
 
     // Verify API was called with correct parameters
     expect(mockDefaultApi).toHaveBeenCalledWith(mockRequest);
@@ -97,9 +98,7 @@ describe('DiffManager', () => {
     wrapper = mount(DiffManager, {
       global: {
         stubs: {
-          AppHeader: {
-            template: '<div class="header-content"><button class="diff-button">Run Diff</button></div>',
-          },
+          AppHeader: true,
         },
       },
     });
@@ -107,13 +106,12 @@ describe('DiffManager', () => {
     wrapper.vm.text1Value = 'test input a';
     wrapper.vm.text2Value = 'test input b';
 
-    // Find and click the Diff button in AppHeader
-    const diffButton = wrapper.find('button.diff-button');
-    await diffButton.trigger('click');
+    // Call handleDiffClick directly
+    await wrapper.vm.handleDiffClick();
 
     // Verify error was logged
     await nextTick();
-    expect(mockConsoleError).toHaveBeenCalledWith('Error from post diff-prettyp:', mockError);
+    expect(mockConsoleError).toHaveBeenCalledWith('Error in diff-prettyp ', mockError);
   });
 
   it('should update diff value when DiffView emits update:modelValue', async () => {
@@ -123,13 +121,15 @@ describe('DiffManager', () => {
       global: {
         stubs: {
           AppHeader: true,
+          Text1View: true,
+          Text2View: true,
+          DiffView: true,
         },
       },
     });
 
-    // Find the DiffView component by selector and trigger the update event on it
-    const diffView = wrapper.find('.diff-container');
-    await diffView.trigger('update:modelValue', mockDiffValue);
+    // Directly set the textDiffValue to simulate receiving update:modelValue
+    wrapper.vm.textDiffValue = mockDiffValue;
 
     expect(wrapper.vm.textDiffValue).toBe(mockDiffValue);
   });

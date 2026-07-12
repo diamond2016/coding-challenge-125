@@ -1,139 +1,79 @@
-## Step 0
+# Project Status - July 12, 2026
 
-**backend**
-We'll use a python layer for the backend, hoping to exploit libraries and packages avalible. 
+## Current State
 
-We want to adopt openapi spec driven approach, because of the language chosen we'll use fastapi, using as much as possible automated code creation
+### Completed ✅
 
-**frontend**
-The frontend will use the Vue.js + typescript technology.
+#### Backend (Step 1 & Step 2)
+- ✅ Created monorepo structure with pnpm (frontend + backend)
+- ✅ Implemented FastAPI backend with OpenAPI spec
+- ✅ Auto-generated TypeScript client on frontend
+- ✅ Implemented Myers diff algorithm in `backend/src/diff/myers_diff.py`
+- ✅ Modified `colorize_string()` to output HTML with inline styles instead of ANSI codes
+- ✅ Modified `myers_diff_prettyp()` to return HTML string directly
+- ✅ Updated backend API endpoint to return `{"diff": "<html>"}` format
+- ✅ Updated backend tests (`test_diff_api.py`, `test_myers_diff.py`) to verify HTML output
+- ✅ All 13 backend tests passing
 
-**template project**
-We start analyzing the architecture and creating a project template. 
+#### Frontend (Step 2)
+- ✅ Updated `DiffView.vue` to render HTML directly via `innerHTML`
+- ✅ Removed unused ANSI color CSS classes
+- ✅ Simplified component by removing `parseAndApplyColors()` function
+- ✅ Added `renderHtml()` function that returns raw HTML string
+- ✅ Updated frontend tests to match new HTML rendering approach
+- ✅ Fixed API mock to return proper response format
 
-We want to use a monorepo approach, what are the better tools, for example for all phases of structure, devel, testing I would like for package management pnpm, ok in this context? 
+### Active Work 🔄
 
-Is it a correct mix Vue/js/node.js and python?.
+#### Frontend Tests (Step 2 - Part 3)
+- ⏳ Running `DiffManager.test.ts` - encountering Vue warnings about unhandled errors
+- ⏳ Two tests failing:
+  - "should call postDiff when Diff button is clicked" - mock not being called
+  - "should handle postDiff error gracefully" - error not being logged
+- ⏳ Issue: AppHeader stub configuration needs adjustment for button click handler
+- ⏳ Current approach: Button should call `$parent.handleDiffClick()` instead of `$emit('onDiffClick')`
 
---- DISCUSSION ON ARCHITECTURE ---
+### Blocked ❌
 
-### 1. Technology Stack Analysis
+- (none currently)
 
-#### Is Vue.js, Node.js (Vite/TypeScript), and Python (FastAPI) a correct mix?
-**Yes, absolutely.** This is a highly robust and popular architecture:
-*   **FastAPI (Python):** Perfect for implementing server-side diffing utilities (e.g., integrating Python's built-in `difflib`, writing custom AST-based parsers, or handling AI-driven explanations with LLMs). It automatically documents APIs with OpenAPI (Swagger) out of the box.
-*   **Vue 3 (Composition API) + TypeScript:** Provides a fast, reactive UI. The diff viewer requires complex reactivity (virtualized lists, synchronized scrolling, settings triggers), and Vue handles this beautifully.
-*   **The Backend Role:** Although the challenge states the viewer "runs entirely in the browser," having a backend is valuable for:
-    *   **Bypassing CORS:** Fetching files from arbitrary URLs (Step 6) directly in-browser will fail due to CORS. The Python backend can act as a proxy.
-    *   **Secure API Keys:** Step 16's "Going Further" suggests AI-powered diff explanations. The backend can call LLM APIs securely without exposing API keys to the browser.
-    *   **Shared/Saved Sessions:** Saving named diffs (Step 14) can be synced to a backend database.
+## Next Steps
 
----
+1. **Fix AppHeader stub in DiffManager.test.ts**
+   - Change button click handler from `$emit('onDiffClick')` to `$parent.handleDiffClick()`
+   - Ensure mockDefaultApi is properly assigned to the API instance
 
-### 2. Monorepo Organization & Tooling
+2. **Verify HTML rendering end-to-end**
+   - Test with backend running locally
+   - Verify color coding works (red=deleted, green=inserted, cyan=equal)
 
-To manage both the Python and TypeScript environments, we can organize them into a clean monorepo. 
+3. **Complete remaining steps from PLAN.md**
+   - Step 3: Add proper view modes (side-by-side, unified, etc.)
+   - Step 4: Add settings panel
+   - Step 5: Add virtualized list for large diffs
+   - Step 6: Add URL-based file fetching
+   - Step 7: Add AI-powered diff explanations
 
-#### Recommended Directory Structure
-```text
-coding-challenge-125/
-├── backend/                  # FastAPI Backend
-│   ├── app/
-│   │   ├── main.py           # Entry point
-│   │   ├── api/              # API router endpoints
-│   │   └── services/         # Diff logic (e.g., Myers diff, parsing)
-│   ├── requirements.txt      # Python dependencies
-│   └── venv/                 # Local Python virtual environment
-├── frontend/                 # Vue 3 + TypeScript + Vite Frontend
-│   ├── src/
-│   │   ├── components/       # Diff viewers, settings panel, etc.
-│   │   ├── worker/           # Web Worker for client-side diffs
-│   │   └── client/           # Auto-generated OpenAPI client
-│   ├── package.json
-│   └── vite.config.ts
-├── package.json              # Root package.json to coordinate commands
-├── pnpm-workspace.yaml       # Defines workspaces for pnpm
-└── README.md
-```
+## Key Files Modified
 
-#### How to manage this with `pnpm`?
-We can use a **hybrid monorepo** approach:
-1.  **Frontend/Node packages:** Managed directly by `pnpm` workspaces.
-2.  **Python Backend:** Isolated in its own folder with a virtual environment (`venv`).
-3.  **Root Orchestration:** The root `package.json` will use `concurrently` (or a similar tool) to run dev servers for both the frontend and backend with a single command (`pnpm dev`).
+### Backend
+- `backend/src/diff/myers_diff.py` - HTML output instead of ANSI codes
+- `backend/app/main.py` - API response format
+- `backend/tests/test_diff_api.py` - HTML output verification
+- `backend/tests/test_myers_diff.py` - HTML output verification
 
-**Root `package.json` Example:**
-```json
-{
-  "name": "online-diff-viewer-monorepo",
-  "private": true,
-  "scripts": {
-    "dev": "concurrently \"pnpm --filter frontend dev\" \"pnpm backend:dev\"",
-    "backend:dev": "cd backend && . venv/bin/activate && uvicorn app.main:app --reload",
-    "openapi:generate": "curl http://localhost:8000/openapi.json > frontend/openapi.json && pnpm --filter frontend generate-client"
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
-  }
-}
-```
+### Frontend
+- `frontend/src/components/DiffView.vue` - HTML rendering
+- `frontend/src/tests/DiffManager.test.ts` - Updated tests for new approach
 
----
+## Technical Details
 
-### 3. OpenAPI-Spec Driven Development
+### HTML Color Mapping
+- Deleted: `color:#e74c3c; background-color:#fadbd8` (red)
+- Inserted: `color:#27ae60; background-color:#d5f5e3` (green)
+- Equal: `color:#7f8c8d; background-color:#f2f6f4` (neutral)
 
-FastAPI automatically hosts an OpenAPI specification at `/openapi.json` when the server is running. We can exploit this to auto-generate fully typed TypeScript API clients on the frontend.
-
-1.  **Define API in FastAPI:** Write Python routes using Pydantic models for request and response structures.
-2.  **Generate Spec:** Start the backend.
-3.  **Generate Frontend Client:** Use a tool like `@hey-api/openapi-ts` or `openapi-typescript` in the `frontend` folder to consume the `/openapi.json` and output typed fetch methods.
-
-This means you never write manual fetch functions or define API interface types in Vue; TypeScript will automatically know the exact structure of your backend endpoints!
-
----
-
-### Running app
-
-`pnpm dev` run all concurrently
-
-- backend localhost:8000
-
-- frontend localhost:5173
-
-
-07.07.2026: We have completed step 1- now study diff algorithm (we want to use existing libraries from python!)
-
-
-## Step 1
-In this step your goal is to compute and display a basic line-level diff between two text inputs.
-
-Create a simple interface with two text areas for input and a diff button. When the user clicks the button, your tool should compute the diff between the two inputs and display the result. Colour-code additions in green, deletions in red, and leave unchanged lines uncoloured or in a neutral colour.
-
-At this stage a simple vertical, unified-style output is fine - we'll add proper views in the next steps.
-
-Testing: Paste the following into your two inputs:
-
-```ts 
-// Left (original):
-function greet(name) {
-  console.log("Hello, " + name);
-}
-
-function farewell(name) {
-  console.log("Goodbye, " + name);
-}
-
-// Right (modified):
-
-function greet(name) {
-  console.log("Hello, " + name + "!");
-  console.log("Have a great day!");
-}
-
-function farewell(name) {
-  console.log("Goodbye, " + name + "!");
-}
-```
-You should see the added lines in green and any lines that exist only in the original in red. Unchanged lines like function greet(name) { should appear without colour.
-
-For this "step 1 approach" we'll use a very simplified version of Myers algorithm the `forward-only' approach. We divide the phase of cosnstructions (which produces a trace) from reconstructions (which returns the operations and data in correct diff order)
+### API Endpoint
+- `POST /api/diff-prettyp/`
+- Request: `{ "string_a": "...", "string_b": "...", "label_a": "...", "label_b": "..." }`
+- Response: `{ "diff": "<html>..." }`
