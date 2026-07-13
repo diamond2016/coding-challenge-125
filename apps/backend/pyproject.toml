@@ -1,0 +1,13 @@
+[project]
+name = "coding-challenge-125-backend"
+version = "1.0.0"
+description = "Diff viewer backend"
+requires-python = ">=3.11"
+
+dependencies = [
+  "fastapi",
+  "uvicorn",
+  "pydantic",
+]
+
+[tool.pdm]
