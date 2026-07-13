@@ -51,7 +51,7 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*DefaultApi* | [**apiDiffPrettypPost**](docs/DefaultApi.md#apidiffprettyppost) | **POST** /api/diff-prettyp | make a diff (Myers) from two text input
+*DefaultApi* | [**apiDiffPost**](docs/DefaultApi.md#apidiffpost) | **POST** /api/diff | make a diff (Myers) from two text input
 
 
 ### Documentation For Models

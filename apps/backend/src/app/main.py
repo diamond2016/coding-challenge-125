@@ -1,15 +1,25 @@
-# apps/backend/src/app/main.py
 from fastapi import FastAPI
-from api.routes.diff import diff
-from api.routes.health import health
-from api.routes.base import base
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.api.routes.health import router as health_router
+from app.api.routes.diff import router as diff_router
+from app.api.routes.root import router as root_router
 
 app = FastAPI(
     title="Online Diff Viewer API",
     version="1.0.0",
 )
 
-# This is the recommended way to organize routes
-app.include_router(base.router)
-app.include_router(health.router)
-app.include_router(diff.router)
+# Enable CORS for frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Register other routes
+app.include_router(root_router)
+app.include_router(health_router)
+app.include_router(diff_router)

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently --kill-others \"pnpm --filter frontend dev\" \"pnpm backend:dev\"",
-    "backend:dev": "cd backend && . venv/bin/activate && uvicorn app.main:app --reload --port 8000"
+    "backend:dev": "cd apps/backend && . .venv/bin/activate && uvicorn app.main:app --reload --port 8000"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

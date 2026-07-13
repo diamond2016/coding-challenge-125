@@ -4,10 +4,10 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**apiDiffPrettypPost**](#apidiffprettyppost) | **POST** /api/diff-prettyp | make a diff (Myers) from two text input|
+|[**apiDiffPost**](#apidiffpost) | **POST** /api/diff | make a diff (Myers) from two text input|
 
-# **apiDiffPrettypPost**
-> DiffPrettypResponse apiDiffPrettypPost(diffPrettypRequest)
+# **apiDiffPost**
+> DiffPrettypResponse apiDiffPost(diffPrettypRequest)
 
 
 ### Example
@@ -24,7 +24,7 @@ const apiInstance = new DefaultApi(configuration);
 
 let diffPrettypRequest: DiffPrettypRequest; //
 
-const { status, data } = await apiInstance.apiDiffPrettypPost(
+const { status, data } = await apiInstance.apiDiffPost(
     diffPrettypRequest
 );
 ```

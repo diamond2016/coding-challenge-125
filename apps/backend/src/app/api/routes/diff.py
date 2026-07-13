@@ -1,15 +1,15 @@
 from fastapi import APIRouter
 
-from src.app.utils.myers_diff import MyersDiff
-from src.app.models.dto.diff_request import DiffRequest
-from src.app.models.dto.diff_response import DiffResponse
+from app.utils.myers_diff import MyersDiff
+from app.models.dto.diff_request import DiffRequest
+from app.models.dto.diff_response import DiffResponse
 
-router = APIRouter(prefix="/diff", tags=["diff"])
+router = APIRouter(prefix="/api", tags=["diff"])
 
 # Initialize diff object
 diff_obj = MyersDiff()
 
-@router.post("/api/diff/")
+@router.post("/diff")
 async def diff(request: DiffRequest) -> DiffResponse:
     """
     Compute prettyp diff between two strings.

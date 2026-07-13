@@ -8,6 +8,15 @@ dependencies = [
   "fastapi",
   "uvicorn",
   "pydantic",
+  "annotated-doc",
+  "annotated-types",
+  "Pygments"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black"
 ]
 
 [tool.pdm]

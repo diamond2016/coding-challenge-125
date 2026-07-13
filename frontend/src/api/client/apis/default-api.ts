@@ -39,10 +39,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiDiffPrettypPost: async (diffPrettypRequest: DiffPrettypRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiDiffPost: async (diffPrettypRequest: DiffPrettypRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'diffPrettypRequest' is not null or undefined
-            assertParamExists('apiDiffPrettypPost', 'diffPrettypRequest', diffPrettypRequest)
-            const localVarPath = `/api/diff-prettyp`;
+            assertParamExists('apiDiffPost', 'diffPrettypRequest', diffPrettypRequest)
+            const localVarPath = `/api/diff`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -83,10 +83,10 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiDiffPrettypPost(diffPrettypRequest: DiffPrettypRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DiffPrettypResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiDiffPrettypPost(diffPrettypRequest, options);
+        async apiDiffPost(diffPrettypRequest: DiffPrettypRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DiffPrettypResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiDiffPost(diffPrettypRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DefaultApi.apiDiffPrettypPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.apiDiffPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -105,8 +105,8 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiDiffPrettypPost(diffPrettypRequest: DiffPrettypRequest, options?: RawAxiosRequestConfig): AxiosPromise<DiffPrettypResponse> {
-            return localVarFp.apiDiffPrettypPost(diffPrettypRequest, options).then((request) => request(axios, basePath));
+        apiDiffPost(diffPrettypRequest: DiffPrettypRequest, options?: RawAxiosRequestConfig): AxiosPromise<DiffPrettypResponse> {
+            return localVarFp.apiDiffPost(diffPrettypRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -122,7 +122,7 @@ export interface DefaultApiInterface {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    apiDiffPrettypPost(diffPrettypRequest: DiffPrettypRequest, options?: RawAxiosRequestConfig): AxiosPromise<DiffPrettypResponse>;
+    apiDiffPost(diffPrettypRequest: DiffPrettypRequest, options?: RawAxiosRequestConfig): AxiosPromise<DiffPrettypResponse>;
 
 }
 
@@ -137,8 +137,8 @@ export class DefaultApi extends BaseAPI implements DefaultApiInterface {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public apiDiffPrettypPost(diffPrettypRequest: DiffPrettypRequest, options?: RawAxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).apiDiffPrettypPost(diffPrettypRequest, options).then((request) => request(this.axios, this.basePath));
+    public apiDiffPost(diffPrettypRequest: DiffPrettypRequest, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).apiDiffPost(diffPrettypRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

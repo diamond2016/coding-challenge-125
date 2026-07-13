@@ -28,7 +28,7 @@
 
   // all for api dif-prettyp
   import { DefaultApi } from '@/api/client/api'
-  import type { DiffPrettypRequest, DiffPrettypResponse, HTTPValidationError } from '@/api/client';
+  import type { DiffPrettypRequest } from '@/api/client';
   import { Configuration } from '@/api/client/configuration'
   const apiConfig = new Configuration({
   basePath: 'http://localhost:8000', // Base URL of the diff API
@@ -38,7 +38,7 @@
   const postDiff = async () => {
     const request: DiffPrettypRequest = {"string_a": text1Value.value, "string_b": text2Value.value }
     try { 
-      const response = await (new DefaultApi(apiConfig).apiDiffPrettypPost(request))
+      const response = await (new DefaultApi(apiConfig).apiDiffPost(request))
       textDiffValue.value = response.data.diff
       console.log("received from api ", response.data)
       console.log('=== diff-prettyp: Received diff from api ===');
