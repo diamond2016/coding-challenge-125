@@ -5,13 +5,13 @@ from app.main import app
 client = TestClient(app)
 
 
-class TestDiffPrettypAPI:
+class TestDiffAPI:
     """Test suite for /api/diff-prettyp endpoint"""
     
-    def test_diff_prettyp_simple_insertion(self):
+    def test_diff_simple_insertion(self):
         """Test diff with simple insertion (ABCD -> ABECD)"""
         response = client.post(
-            "/api/diff-prettyp/",
+            "/api/diff",
             json={"string_a": "ABCD", "string_b": "ABECD"}
         )
         assert response.status_code == 200
@@ -25,10 +25,10 @@ class TestDiffPrettypAPI:
         print(f"✓ Simple insertion test passed")
         print(f"  Result: {result['diff'][:200]}...")
     
-    def test_diff_prettyp_simple_deletion(self):
+    def test_diff_simple_deletion(self):
         """Test diff with simple deletion (ABECD -> ABCD)"""
         response = client.post(
-            "/api/diff-prettyp/",
+            "/api/diff",
             json={"string_a": "ABECD", "string_b": "ABCD"}
         )
         assert response.status_code == 200
@@ -42,10 +42,10 @@ class TestDiffPrettypAPI:
         print(f"✓ Simple deletion test passed")
         print(f"  Result: {result['diff'][:200]}...")
     
-    def test_diff_prettyp_identical_strings(self):
+    def test_diff_identical_strings(self):
         """Test diff with identical strings"""
         response = client.post(
-            "/api/diff-prettyp/",
+            "/api/diff",
             json={"string_a": "ABC", "string_b": "ABC"}
         )
         assert response.status_code == 200
@@ -59,10 +59,10 @@ class TestDiffPrettypAPI:
         print(f"✓ Identical strings test passed")
         print(f"  Result: {result['diff'][:200]}...")
     
-    def test_diff_prettyp_empty_strings(self):
+    def test_diff_empty_strings(self):
         """Test diff with empty strings"""
         response = client.post(
-            "/api/diff-prettyp/",
+            "/api/diff",
             json={"string_a": "", "string_b": ""}
         )
         assert response.status_code == 200
@@ -72,10 +72,10 @@ class TestDiffPrettypAPI:
         print(f"✓ Empty strings test passed")
         print(f"  Result: {result['diff']}")
     
-    def test_diff_prettyp_complex_diff(self):
+    def test_diff_complex_diff(self):
         """Test diff with complex changes"""
         response = client.post(
-            "/api/diff-prettyp/",
+            "/api/diff",
             json={"string_a": "THE QUICK BROWN FOX", "string_b": "THE SLOW BROWN DOG"}
         )
         assert response.status_code == 200
@@ -93,19 +93,19 @@ class TestDiffPrettypAPI:
         print(f"✓ Complex diff test passed")
         print(f"  Result: {result['diff'][:300]}...")
     
-    def test_diff_prettyp_missing_fields(self):
+    def test_diff_missing_fields(self):
         """Test diff with missing fields"""
         response = client.post(
-            "/api/diff-prettyp/",
+            "/api/diff",
             json={"string_a": "ABC"}
         )
         assert response.status_code == 422  # Validation error
         print(f"✓ Missing fields test passed (validation error)")
     
-    def test_diff_prettyp_both_empty(self):
+    def test_diff_both_empty(self):
         """Test diff with both strings empty"""
         response = client.post(
-            "/api/diff-prettyp/",
+            "/api/diff",
             json={"string_a": "", "string_b": ""}
         )
         assert response.status_code == 200

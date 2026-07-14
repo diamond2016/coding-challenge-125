@@ -3,20 +3,25 @@ name = "coding-challenge-125-backend"
 version = "1.0.0"
 description = "Diff viewer backend"
 requires-python = ">=3.11"
-
 dependencies = [
-  "fastapi",
-  "uvicorn",
-  "pydantic",
+  "fastapi>=0.115.0",
+  "uvicorn>=0.32.0",
+  "pydantic>=2.9.0",
   "annotated-doc",
   "annotated-types",
-  "Pygments"
+  "Pygments",
+  "pytest>=8.3.0",
+  "black>=24.4.0",
+  "httpx>=0.28.0",
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pytest",
-    "black"
-]
+dev = ["pytest>=8.3.0", "black>=24.4.0"]
 
-[tool.pdm]
+[project.scripts]
+dev = "uv run python -c \"import sys; sys.path.insert(0, 'src'); import uvicorn; uvicorn.run('app.main:app', reload=True, port=8000)\""
+test = "uv run python -c \"import sys; sys.path.insert(0, 'src'); import pytest; pytest.main(['tests/', '-v'])\""
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]

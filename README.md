@@ -1,16 +1,77 @@
-Coding Challenge #125 - Online Diff Viewer
-This challenge is to build your own online diff viewer.
-John Crickett
-Jul 04, 2026
+# Online Diff Viewer
 
-If you’ve ever used GitHub, GitLab, or any code review tool, you’ve seen a diff viewer. It’s the side-by-side or unified view that shows you exactly what changed between two versions of a file - green for additions, red for deletions. But how do these tools actually work? In this challenge you’ll find out by building one yourself. You’ll implement a diff algorithm, render the results in multiple visual formats, and add all the quality-of-life features that make a diff viewer truly useful.
+A web application for comparing two text inputs using the Myers Diff algorithm.
 
-The Challenge - Building Your Own Online Diff Viewer
-You’re going to build an online diff viewer that runs entirely in the browser. Users will paste, upload, or drag-and-drop two pieces of text, and your tool will show them exactly what changed. Over several steps you’ll add side-by-side and unified views, syntax highlighting, navigation tools, export options, and accessibility features.
+## Quick Start
 
-(The challenge): [https://www.linkedin.com/pulse/coding-challenge-125-online-diff-viewer-john-crickett-rgepf/]
+### Prerequisites
 
+Install **pnpm** and **uv**:
 
-12.07.2026 completed step1. See picture:
-![example diff - step1](home-step1.png) 
- 
+```bash
+# pnpm (for frontend)
+npm install -g pnpm
+
+# uv (for backend)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### Installation
+
+```bash
+# Install all dependencies
+pnpm install
+```
+
+### Development
+
+```bash
+# Run both frontend and backend
+pnpm dev
+
+# Or run separately
+pnpm frontend:dev    # Frontend on http://localhost:5173
+pnpm backend:dev     # Backend on http://localhost:8000
+```
+
+### Testing
+
+```bash
+# Run all tests
+pnpm test
+
+# Or run separately
+pnpm test:frontend   # Frontend tests
+pnpm test:backend    # Backend tests
+```
+
+## Architecture
+
+See [ARCHITECTURE.md](apps/shared/docs/ARCHITECTURE.md) for detailed documentation.
+
+## Tech Stack
+
+- **Frontend**: Vue 3 + Vite + TypeScript
+- **Backend**: FastAPI + Python 3.11+
+- **Diff Algorithm**: Myers Diff (character-level)
+
+## API
+
+### Compute Diff
+
+```bash
+curl -X POST http://localhost:8000/api/diff \
+  -H "Content-Type: application/json" \
+  -d '{"string_a": "ABCD", "string_b": "ABECD"}'
+```
+
+Response:
+```json
+{
+  "diff": "<span style='background-color:#f2f6f4'>A</span><span style='background-color:#f2f6f4'>B</span><span style='background-color:#d5f5e3'>E</span><span style='background-color:#f2f6f4'>C</span><span style='background-color:#f2f6f4'>D</span>"
+}
+```
+
+## License
+
+MIT

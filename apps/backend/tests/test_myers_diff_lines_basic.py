@@ -1,5 +1,5 @@
 # /backend/test_myers_diff_verbose.py
-from src.diff.myers_diff import MyersDiff
+from app.utils.myers_diff import MyersDiff
 
 def test_myers_diff_basic():
     """

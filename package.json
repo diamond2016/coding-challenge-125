@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently --kill-others \"pnpm --filter frontend dev\" \"pnpm backend:dev\"",
-    "backend:dev": "cd apps/backend && . .venv/bin/activate && uvicorn app.main:app --reload --port 8000"
+    "dev": "concurrently --kill-others \"pnpm --filter frontend run dev\" \"cd apps/backend && PYTHONPATH=src uv run uvicorn app.main:app --reload --port 8000\"",
+    "frontend:dev": "pnpm --filter frontend run dev",
+    "backend:dev": "cd apps/backend && PYTHONPATH=src uv run uvicorn app.main:app --reload --port 8000",
+    "test:frontend": "pnpm --filter frontend run test:run",
+    "test:backend": "cd apps/backend && uv run pytest tests/ -v",
+    "test": "pnpm test:frontend && pnpm test:backend"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
