@@ -68,3 +68,7 @@ build/
 # pnpm
 .pnpm-store/
 pnpm-debug.log*
+
+# Node modules
+node_modules/
+
