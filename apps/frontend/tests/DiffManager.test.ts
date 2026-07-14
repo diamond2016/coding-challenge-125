@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
 
 import DiffManager from '@/views/DiffManager.vue';
@@ -8,29 +8,32 @@ import type { DiffPrettypRequest, DiffPrettypResponse } from '@/api/client';
 
 // Mock the API client
 vi.mock('@/api/client/api', () => ({
-  DefaultApi: vi.fn().mockImplementation(() => ({
-    apiDiffPost: vi.fn(),
-  })),
+  DefaultApi: vi.fn(function () {
+    return {
+      apiDiffPost: vi.fn(),
+    };
+  }),
 }));
-
-// Mock console.log to track calls
-const mockConsoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
 
 describe('DiffManager', () => {
   let wrapper: ReturnType<typeof mount<DiffManager>>;
   let mockApiInstance: any;
   let mockApiDiffPost: any;
+  let mockConsoleLog: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     // Reset all mocks before each test
     vi.clearAllMocks();
-    mockConsoleLog.mockClear();
+
+    mockConsoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
 
     // Create a mock for DefaultApi
     mockApiInstance = {
       apiDiffPost: vi.fn(),
     };
-    vi.mocked(DefaultApi).mockImplementation(() => mockApiInstance);
+    vi.mocked(DefaultApi).mockImplementation(function () {
+      return mockApiInstance;
+    });
 
     // Store reference to the apiDiffPost function
     mockApiDiffPost = mockApiInstance.apiDiffPost;
@@ -97,9 +100,11 @@ describe('DiffManager', () => {
     wrapper.vm.text2Value = 'test input b';
     await nextTick();
 
-    // Find the stubbed AppHeader component and trigger its 'diffClick' event
+    // Invoke the callback prop passed to the stubbed AppHeader component
     const appHeaderStub = wrapper.findComponent({ name: 'AppHeader' });
-    await appHeaderStub.vm.$emit('diffClick'); // Simulate the click event
+    const onDiffClick = appHeaderStub.props('onDiffClick') as () => Promise<void>;
+    await onDiffClick();
+    await flushPromises();
 
     // Verify API was called with correct parameters
     expect(mockApiDiffPost).toHaveBeenCalledWith(mockRequest);
@@ -126,12 +131,13 @@ describe('DiffManager', () => {
     wrapper.vm.text2Value = 'test input b';
     await nextTick();
 
-    // Find the stubbed AppHeader component and trigger its 'diffClick' event
+    // Invoke the callback prop passed to the stubbed AppHeader component
     const appHeaderStub = wrapper.findComponent({ name: 'AppHeader' });
-    await appHeaderStub.vm.$emit('diffClick'); // Simulate the click event
+    const onDiffClick = appHeaderStub.props('onDiffClick') as () => Promise<void>;
+    await onDiffClick();
+    await flushPromises();
 
     // Verify error was logged (using console.log, not console.error)
-    await nextTick();
     expect(mockConsoleLog).toHaveBeenCalledWith('Error in diff-prettyp ', mockError);
   });
 
