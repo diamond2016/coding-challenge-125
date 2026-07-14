@@ -1,6 +1,7 @@
 # Online Diff Viewer
 
 A web application for comparing two text inputs using the Myers Diff algorithm.
+See "Coding Callenge #125" by J. Crickett [link](https://codingchallenges.substack.com/p/coding-challenge-125-online-diff)
 
 ## Quick Start
 
