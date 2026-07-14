@@ -72,6 +72,8 @@ Response:
 }
 ```
 
+## Example
+![example image diff in home page](home-step1.png)
 ## License
 
 MIT
